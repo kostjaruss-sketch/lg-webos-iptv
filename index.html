@@ -62,7 +62,7 @@
   <h2>Playlist einrichten</h2>
   <p>Gib später hier deinen M3U-Link ein.</p>
   <input id="playlistUrl" type="url" placeholder="M3U-Link">
-  <button onclick="alert('Die Ladefunktion folgt im nächsten Schritt.')">
+  <button onclick="loadPlaylist()">
     Playlist laden
   </button>
 </section>
@@ -96,6 +96,36 @@
       document.getElementById('description').textContent =
         pages[page].description;
     }
+  async function loadPlaylist() {
+  const url = document.getElementById('playlistUrl').value.trim();
+
+  if (!url) {
+    alert('Bitte zuerst den M3U-Link eingeben.');
+    return;
+  }
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Playlist konnte nicht geladen werden.');
+    }
+
+    const text = await response.text();
+
+    if (!text.startsWith('#EXTM3U')) {
+      throw new Error('Das ist keine gültige M3U-Playlist.');
+    }
+
+    alert('Playlist erfolgreich geladen!');
+    document.getElementById('title').textContent = 'Playlist geladen';
+    document.getElementById('description').textContent =
+      'Die Playlist wurde gelesen. Als Nächstes zeigen wir die Sender und Filme an.';
+  } catch (error) {
+    alert('Fehler beim Laden: ' + error.message +
+      '\nDer Anbieter muss den Zugriff aus dem Browser erlauben.');
+  }
+}
   </script>
 </body>
 </html>
