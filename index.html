@@ -58,14 +58,23 @@
 
   
   <main>
-    <section class="panel">
-  <h2>Playlist einrichten</h2>
-  <p>Gib später hier deinen M3U-Link ein.</p>
-  <input id="playlistUrl" type="url" placeholder="M3U-Link">
-  <button onclick="loadPlaylist()">
-    Playlist laden
-  </button>
+    
+<section class="panel">
+  <h2>Meine Playlists</h2>
+
+  <p>Live-TV – M3U-Link</p>
+  <input id="tvUrl" type="url" placeholder="M3U-Link für Live-TV">
+
+  <p>Filme – M3U-Link</p>
+  <input id="moviesUrl" type="url" placeholder="M3U-Link für Filme">
+
+  <p>Serien – M3U-Link</p>
+  <input id="seriesUrl" type="url" placeholder="M3U-Link für Serien">
+
+  <button onclick="savePlaylists()">Playlists speichern</button>
+  <p id="playlistStatus">Noch keine Playlists gespeichert.</p>
 </section>
+
     <section class="panel">
       <h2 id="title">Willkommen!</h2>
       <p id="description">
@@ -96,6 +105,7 @@
       document.getElementById('description').textContent =
         pages[page].description;
     }
+    
   async function loadPlaylist() {
   const url = document.getElementById('playlistUrl').value.trim();
 
@@ -126,6 +136,7 @@
       '\nDer Anbieter muss den Zugriff aus dem Browser erlauben.');
   }
 }
+  
   </script>
 </body>
 </html>
