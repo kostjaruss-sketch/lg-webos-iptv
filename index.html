@@ -136,7 +136,30 @@
       '\nDer Anbieter muss den Zugriff aus dem Browser erlauben.');
   }
 }
-  
+  function savePlaylists() {
+  const playlists = {
+    tv: document.getElementById('tvUrl').value.trim(),
+    movies: document.getElementById('moviesUrl').value.trim(),
+    series: document.getElementById('seriesUrl').value.trim()
+  };
+
+  localStorage.setItem('myIPTVPlaylists', JSON.stringify(playlists));
+
+  document.getElementById('playlistStatus').textContent =
+    'Playlists wurden in diesem Browser gespeichert.';
+}
+
+function loadSavedPlaylists() {
+  const saved = localStorage.getItem('myIPTVPlaylists');
+  if (!saved) return;
+
+  const playlists = JSON.parse(saved);
+  document.getElementById('tvUrl').value = playlists.tv || '';
+  document.getElementById('moviesUrl').value = playlists.movies || '';
+  document.getElementById('seriesUrl').value = playlists.series || '';
+}
+
+window.addEventListener('DOMContentLoaded', loadSavedPlaylists);
   </script>
 </body>
 </html>
