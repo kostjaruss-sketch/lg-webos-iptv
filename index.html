@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meine IPTV Videothek</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -221,7 +222,15 @@ async function ladePlaylist(url, bereich) {
         video.controls = true;
         video.autoplay = true;
         video.style.width = '100%';
-        video.src = eintrag.link;
+        
+if (Hls.isSupported()) {
+  const hls = new Hls();
+  hls.loadSource(eintrag.link);
+  hls.attachMedia(video);
+} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+  video.src = eintrag.link;
+}
+
         ausgabe.replaceChildren(video);
       };
       ausgabe.appendChild(knopf);
