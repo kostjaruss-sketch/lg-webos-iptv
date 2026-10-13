@@ -64,7 +64,9 @@
 
   <p>Live-TV – M3U-Link</p>
   <input id="tvUrl" type="url" placeholder="M3U-Link für Live-TV">
-
+<p>M3U-Datei vom Computer öffnen:</p>
+<input id="m3uFile" type="file" accept=".m3u,.m3u8,.txt">
+<button onclick="loadM3UFile()">Datei laden</button>
   <p>Filme – M3U-Link</p>
   <input id="moviesUrl" type="url" placeholder="M3U-Link für Filme">
 
@@ -230,6 +232,59 @@ async function ladePlaylist(url, bereich) {
       '. Der Anbieter muss eventuell Browserzugriff erlauben.';
   }
 }
+  
+async function loadM3UFile() {
+  const datei = document.getElementById('m3uFile').files[0];
+  const ausgabe = document.getElementById('playlistAusgabe');
+
+  if (!datei) {
+    alert('Bitte zuerst eine M3U-Datei auswählen.');
+    return;
+  }
+
+  const text = await datei.text();
+  const zeilen = text.split(/\r?\n/);
+  const sender = [];
+
+  for (let i = 0; i < zeilen.length; i++) {
+    if (zeilen[i].startsWith('#EXTINF:')) {
+      const titel = zeilen[i].split(',').pop().trim();
+      const link = zeilen.slice(i + 1).find(
+        z => z.trim() && !z.trim().startsWith('#')
+      );
+
+      if (link) sender.push({ titel, link: link.trim() });
+    }
+  }
+
+  ausgabe.innerHTML = '';
+
+  if (!sender.length) {
+    ausgabe.textContent = 'Keine Sender gefunden.';
+    return;
+  }
+
+  sender.forEach(s => {
+    const knopf = document.createElement('button');
+    knopf.textContent = s.titel;
+    knopf.style.display = 'block';
+    knopf.style.margin = '8px';
+    knopf.onclick = () => {
+      const video = document.createElement('video');
+      video.controls = true;
+      video.autoplay = true;
+      video.style.width = '100%';
+      video.src = s.link;
+      ausgabe.replaceChildren(video);
+    };
+    ausgabe.appendChild(knopf);
+  });
+
+  document.getElementById('title').textContent = 'Live-TV';
+  document.getElementById('description').textContent =
+    sender.length + ' Sender geladen.';
+}
+
 </script>
 
 </body>
