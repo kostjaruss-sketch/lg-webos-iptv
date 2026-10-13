@@ -161,5 +161,61 @@ function loadSavedPlaylists() {
 
 window.addEventListener('DOMContentLoaded', loadSavedPlaylists);
   </script>
+   
+<script>
+async function ladePlaylist(url, bereich) {
+  const ausgabe = document.getElementById('playlistAusgabe');
+  ausgabe.innerHTML = 'Playlist wird geladen …';
+
+  try {
+    const antwort = await fetch(url);
+    if (!antwort.ok) throw new Error('HTTP ' + antwort.status);
+
+    const text = await antwort.text();
+    if (!text.trim().startsWith('#EXTM3U')) {
+      throw new Error('Keine gültige M3U-Playlist');
+    }
+
+    const zeilen = text.split(/\r?\n/);
+    const sender = [];
+
+    for (let i = 0; i < zeilen.length; i++) {
+      if (zeilen[i].startsWith('#EXTINF:')) {
+        const titel = zeilen[i].split(',').pop().trim();
+        const link = zeilen.slice(i + 1).find(z => z.trim() && !z.startsWith('#'));
+
+        if (link) sender.push({ titel, link: link.trim() });
+      }
+    }
+
+    ausgabe.innerHTML = '';
+    if (!sender.length) {
+      ausgabe.textContent = 'Keine Einträge gefunden.';
+      return;
+    }
+
+    sender.forEach(eintrag => {
+      const knopf = document.createElement('button');
+      knopf.textContent = eintrag.titel;
+      knopf.style.display = 'block';
+      knopf.style.margin = '8px';
+      knopf.onclick = () => {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        video.style.width = '100%';
+        video.src = eintrag.link;
+        ausgabe.replaceChildren(video);
+      };
+      ausgabe.appendChild(knopf);
+    });
+  } catch (fehler) {
+    ausgabe.textContent =
+      'Fehler beim Laden: ' + fehler.message +
+      '. Der Anbieter muss eventuell Browserzugriff erlauben.';
+  }
+}
+</script>
+
 </body>
 </html>
