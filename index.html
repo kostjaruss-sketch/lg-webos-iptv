@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meine IPTV Videothek</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #10131c;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 28px 40px;
+      background: #191e2b;
+      border-bottom: 2px solid #343b50;
+    }
+    h1 { margin: 0; color: #64d8ff; }
+    nav { padding: 20px 40px; }
+    button {
+      background: #252c3d;
+      color: white;
+      border: 2px solid #46516a;
+      border-radius: 8px;
+      padding: 15px 25px;
+      margin-right: 12px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    button:focus {
+      outline: 3px solid #64d8ff;
+      background: #087ca7;
+    }
+    main { padding: 10px 40px; }
+    .panel {
+      background: #191e2b;
+      border-radius: 12px;
+      padding: 25px;
+      min-height: 220px;
+    }
+    h2 { color: #64d8ff; }
+    p { font-size: 20px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MEINE IPTV VIDEOTHEK</h1>
+    <p>Live-TV · Filme · Serien</p>
+  </header>
+
+  <nav>
+    <button onclick="showPage('tv')">Live-TV</button>
+    <button onclick="showPage('movies')">Filme</button>
+    <button onclick="showPage('series')">Serien</button>
+  </nav>
+
+  <main>
+    <section class="panel">
+      <h2 id="title">Willkommen!</h2>
+      <p id="description">
+        Wähle oben Live-TV, Filme oder Serien.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    function showPage(page) {
+      const pages = {
+        tv: {
+          title: 'Live-TV',
+          description: 'Hier werden später deine TV-Sender angezeigt.'
+        },
+        movies: {
+          title: 'Filme',
+          description: 'Hier entsteht deine Filmbibliothek.'
+        },
+        series: {
+          title: 'Serien',
+          description: 'Hier entsteht deine Serienbibliothek.'
+        }
+      };
+
+      document.getElementById('title').textContent =
+        pages[page].title;
+      document.getElementById('description').textContent =
+        pages[page].description;
+    }
+  </script>
+</body>
+</html>
